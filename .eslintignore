@@ -1,0 +1,4 @@
+.eslintrc.cjs
+tailwind.config.js
+babel.config.js
+prettier.config.js
