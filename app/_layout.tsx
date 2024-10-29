@@ -11,6 +11,17 @@ export default function RootLayout() {
   return (
     <Stack>
       <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="otp"
+        options={{ headerTitle: 'Enter Your Phone Number', headerBackVisible: false }}
+      />
+      <Stack.Screen
+        name="verify/[phone]"
+        options={{
+          headerTitle: 'Verify Code',
+          headerBackTitle: 'Edit Number',
+        }}
+      />
     </Stack>
   );
 }
