@@ -1,22 +1,27 @@
+import { isClerkAPIResponseError, useSignIn, useSignUp } from '@clerk/clerk-expo';
 import { useReactive } from 'ahooks';
 import clsx from 'clsx';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { useEffect } from 'react';
-import { Platform, Text, TouchableOpacity, View } from 'react-native';
+import { useCallback, useEffect } from 'react';
+import { ActivityIndicator, Alert, Platform, Text, TouchableOpacity, View } from 'react-native';
 import {
   CodeField,
   Cursor,
   useBlurOnFulfill,
   useClearByFocusCell,
 } from 'react-native-confirmation-code-field';
+import colors from '~/constants/colors';
 
 const CELL_COUNT = 6;
 
 const PhoneOtpPage = () => {
-  const { phone, signIn } = useLocalSearchParams<{ phone: string; signIn: string }>();
+  const { phone, signin } = useLocalSearchParams<{ phone: string; signin: string }>();
   const state = useReactive({
     code: '',
+    loading: false,
   });
+  const { signUp, setActive } = useSignUp();
+  const { signIn } = useSignIn();
   console.log('state.code', state.code);
   const ref = useBlurOnFulfill({ value: state.code, cellCount: CELL_COUNT });
   const onChangeText = (code: string) => {
@@ -28,20 +33,73 @@ const PhoneOtpPage = () => {
   });
   console.log('props', props);
 
-  const verifyCode = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-  };
-  const verifySignIn = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-  };
+  const verifyCode = useCallback(async () => {
+    try {
+      await signUp!.attemptPhoneNumberVerification({
+        code: state.code,
+      });
+
+      await setActive!({ session: signUp!.createdSessionId });
+    } catch (err) {
+      console.log('error', JSON.stringify(err, null, 2));
+      if (isClerkAPIResponseError(err)) {
+        Alert.alert('Error', err.errors[0].message);
+      }
+      state.loading = false;
+    }
+  }, [signUp, setActive, state]);
+  const verifySignIn = useCallback(async () => {
+    try {
+      await signIn!.attemptFirstFactor({
+        strategy: 'phone_code',
+        code: state.code,
+      });
+
+      await setActive!({ session: signIn!.createdSessionId });
+    } catch (err) {
+      console.log('error', JSON.stringify(err, null, 2));
+      if (isClerkAPIResponseError(err)) {
+        Alert.alert('Error', err.errors[0].message);
+      }
+      state.loading = false;
+    }
+  }, [signIn, state, setActive]);
   const resendCode = async () => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    try {
+      if (signin === 'true') {
+        const { supportedFirstFactors } = await signIn!.create({
+          identifier: phone,
+        });
+
+        const firstPhoneFactor: any = supportedFirstFactors?.find((factor: any) => {
+          return factor.strategy === 'phone_code';
+        });
+
+        const { phoneNumberId } = firstPhoneFactor;
+
+        await signIn!.prepareFirstFactor({
+          strategy: 'phone_code',
+          phoneNumberId,
+        });
+      } else {
+        await signUp!.create({
+          phoneNumber: phone,
+        });
+        signUp!.preparePhoneNumberVerification();
+      }
+    } catch (err) {
+      console.log('error', JSON.stringify(err, null, 2));
+      if (isClerkAPIResponseError(err)) {
+        Alert.alert('Error', err.errors[0].message);
+      }
+    }
   };
 
   useEffect(() => {
     console.log('code', state.code);
     if (state.code.length === 6) {
-      if (signIn === 'true') {
+      state.loading = true;
+      if (signin === 'true') {
         // login
         verifySignIn();
       } else {
@@ -49,7 +107,7 @@ const PhoneOtpPage = () => {
         verifyCode();
       }
     }
-  }, [signIn, state.code]);
+  }, [signIn, signin, state, state.code, verifyCode, verifySignIn]);
   return (
     <View className="flex-1 items-center gap-5 bg-background p-5">
       <Stack.Screen options={{ headerTitle: phone }} />
@@ -91,6 +149,7 @@ const PhoneOtpPage = () => {
       <TouchableOpacity className="w-full items-center" onPress={resendCode}>
         <Text className="text-lg text-primary">Didn't receive the verification code?</Text>
       </TouchableOpacity>
+      {state.loading && <ActivityIndicator color={colors.primary} size="large" />}
     </View>
   );
 };

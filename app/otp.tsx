@@ -1,9 +1,11 @@
+import { isClerkAPIResponseError, useSignIn, useSignUp } from '@clerk/clerk-expo';
 import { Ionicons } from '@expo/vector-icons';
 import { useReactive } from 'ahooks';
 import clsx from 'clsx';
-import { useRouter } from 'expo-router';
+import { Href, useRouter } from 'expo-router';
 import {
   ActivityIndicator,
+  Alert,
   KeyboardAvoidingView,
   Linking,
   Platform,
@@ -28,6 +30,7 @@ const GER_PHONE = [
   /\d/,
   /\d/,
   /\d/,
+  ' ',
   /\d/,
   /\d/,
   /\d/,
@@ -39,23 +42,61 @@ const OtpPage = () => {
     loading: false,
     phoneNumber: '',
   });
+  const { signUp, setActive } = useSignUp();
+  const { signIn } = useSignIn();
   const { bottom } = useSafeAreaInsets();
   const router = useRouter();
+
   const keyboardVerticalOffset = Platform.OS === 'ios' ? 90 : 0;
   const openLink = () => {
     Linking.openURL('https://www.google.com');
   };
   const sendOtp = async () => {
     state.loading = true;
-    await new Promise((resolve) => setTimeout(resolve, 200));
-    state.loading = false;
-    router.push(`/verify/${state.phoneNumber}`);
+    try {
+      await signUp!.create({
+        phoneNumber: state.phoneNumber,
+      });
+      await signUp!.preparePhoneNumberVerification();
+      router.push(`/verify/${state.phoneNumber}`);
+    } catch (error) {
+      if (isClerkAPIResponseError(error)) {
+        if (error.errors[0].code === 'form_identifier_exists') {
+          // User signed up before
+          console.log('User signed up before');
+          await trySignIn();
+        } else {
+          state.loading = false;
+          Alert.alert('Error', error.errors[0].message);
+        }
+      }
+    }
   };
 
-  const trySignIn = async () => {};
+  const trySignIn = async () => {
+    console.log('trySignIn', state.phoneNumber);
+
+    const { supportedFirstFactors } = await signIn!.create({
+      identifier: state.phoneNumber,
+    });
+
+    const firstPhoneFactor: any = supportedFirstFactors?.find((factor: any) => {
+      return factor.strategy === 'phone_code';
+    });
+
+    const { phoneNumberId } = firstPhoneFactor;
+
+    await signIn!.prepareFirstFactor({
+      strategy: 'phone_code',
+      phoneNumberId,
+    });
+
+    router.push(`/verify/${state.phoneNumber}?signin=true` as Href<string>);
+    state.loading = false;
+  };
 
   return (
-    <KeyboardAvoidingView className="flex-1">
+    <KeyboardAvoidingView className="flex-1" keyboardVerticalOffset={keyboardVerticalOffset}>
       {state.loading && (
         <View className="absolute bottom-0 left-0 right-0 top-0 z-10 items-center justify-center bg-white">
           <ActivityIndicator color={Colors.primary} size="large" />
@@ -77,7 +118,7 @@ const OtpPage = () => {
             autoFocus
             keyboardType="numeric"
             mask={GER_PHONE}
-            placeholder="+49 Your Phone Number"
+            placeholder="+86 Your Phone Number"
             value={state.phoneNumber}
             style={{
               backgroundColor: '#fff',
