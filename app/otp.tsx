@@ -47,7 +47,7 @@ const OtpPage = () => {
   };
   const sendOtp = async () => {
     state.loading = true;
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 200));
     state.loading = false;
     router.push(`/verify/${state.phoneNumber}`);
   };
@@ -62,17 +62,17 @@ const OtpPage = () => {
           <Text style={{ fontSize: 18, padding: 10 }}>Sending code...</Text>
         </View>
       )}
-      <View className="bg-background  flex-1 items-center gap-5 p-5">
-        <Text className="text-gray text-sm">
+      <View className="flex-1 items-center gap-5 bg-background p-5">
+        <Text className="text-sm text-gray">
           WhatsApp will need to verify your account. Carrier charges may apply.
         </Text>
         <View className="w-full rounded-xl bg-white p-2.5">
           <View className="mb-1 flex-row items-center justify-between p-1.5">
-            <Text className="text-primary text-lg">Germany</Text>
+            <Text className="text-lg text-primary">Germany</Text>
             <Ionicons className="text-gray" name="chevron-forward" size={20} />
           </View>
           {/* seprator */}
-          <View className="bg-gray h-hairline w-full opacity-20" />
+          <View className="h-hairline w-full bg-gray opacity-20" />
           <MaskInput
             autoFocus
             keyboardType="numeric"
@@ -114,15 +114,15 @@ const OtpPage = () => {
           disabled={!state.phoneNumber}
           style={{ marginBottom: bottom }}
           className={clsx(
-            `text-lightGray w-full items-center
-            rounded-xl p-2.5`,
+            `w-full items-center rounded-xl
+            p-2.5 text-lightGray`,
             {
               'bg-primary text-white': !!state.phoneNumber,
             }
           )}
           onPress={sendOtp}>
           <Text
-            className={clsx(`text-gray text-[22px] font-normal`, {
+            className={clsx(`text-[22px] font-normal text-gray`, {
               'bg-primary text-white': !!state.phoneNumber,
             })}>
             Next
