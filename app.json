@@ -3,6 +3,7 @@
     "name": "rn-whatsapp",
     "slug": "rn-whatsapp",
     "version": "1.0.0",
+    "icon": "./assets/images/icon.png",
     "scheme": "rn-whatsapp",
     "web": {
       "bundler": "metro",
@@ -18,10 +19,9 @@
       "tsconfigPaths": true
     },
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -34,7 +34,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.kitety.rnwhatsapp"
