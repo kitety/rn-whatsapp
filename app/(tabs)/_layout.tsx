@@ -60,7 +60,7 @@ const Layout = () => {
           }}
         />
         <Tabs.Screen
-          name="setting"
+          name="settings"
           options={{
             title: 'Settings',
             tabBarIcon: ({ size, color }) => <Ionicons color={color} name="cog" size={size} />,

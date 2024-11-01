@@ -53,7 +53,7 @@ const InitialLayout = () => {
     if (!isLoaded) return;
     const isTabGroup = segement?.[0] === '(tabs)';
     if (isSignedIn && !isTabGroup) {
-      router.replace('/(tabs)/chats');
+      router.replace('/(tabs)/settings');
     } else if (!isSignedIn && isTabGroup) {
       router.replace('/');
     }

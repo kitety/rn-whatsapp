@@ -6,6 +6,7 @@ import { Href, useRouter } from 'expo-router';
 import {
   ActivityIndicator,
   Alert,
+  Keyboard,
   KeyboardAvoidingView,
   Linking,
   Platform,
@@ -47,11 +48,11 @@ const OtpPage = () => {
   const { bottom } = useSafeAreaInsets();
   const router = useRouter();
 
-  const keyboardVerticalOffset = Platform.OS === 'ios' ? 90 : 0;
   const openLink = () => {
     Linking.openURL('https://www.google.com');
   };
   const sendOtp = async () => {
+    Keyboard.dismiss();
     state.loading = true;
     try {
       await signUp!.create({
@@ -96,7 +97,11 @@ const OtpPage = () => {
   };
 
   return (
-    <KeyboardAvoidingView className="flex-1" keyboardVerticalOffset={keyboardVerticalOffset}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // 修改1: 添加合适的behavior
+      className="flex-1"
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 40 + bottom : 0} // 修改2: 考虑底部安全区域
+    >
       {state.loading && (
         <View className="absolute bottom-0 left-0 right-0 top-0 z-10 items-center justify-center bg-white">
           <ActivityIndicator color={Colors.primary} size="large" />
