@@ -9,11 +9,12 @@ const SettingsLayout = () => {
       <Stack.Screen
         name="index"
         options={{
-          headerTitle: 'Calls',
+          title: 'Calls',
           headerLargeTitle: true,
           headerShadowVisible: false,
           headerBlurEffect: 'regular',
-          headerStyle: { backgroundColor: colors.background },
+          headerTransparent: true,
+          // headerStyle: { backgroundColor: colors.background },
           headerSearchBarOptions: {
             placeholder: 'Search',
           },
