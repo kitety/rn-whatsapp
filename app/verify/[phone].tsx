@@ -1,7 +1,7 @@
 import { isClerkAPIResponseError, useSignIn, useSignUp } from '@clerk/clerk-expo';
 import { useReactive } from 'ahooks';
 import clsx from 'clsx';
-import { Stack, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect } from 'react';
 import { ActivityIndicator, Alert, Platform, Text, TouchableOpacity, View } from 'react-native';
 import {
@@ -110,7 +110,6 @@ const PhoneOtpPage = () => {
   }, [signIn, signin, state, state.code, verifyCode, verifySignIn]);
   return (
     <View className="flex-1 items-center gap-5 bg-background p-5">
-      <Stack.Screen options={{ headerTitle: phone }} />
       <Text className="items-center text-base text-black">
         We have sent you an SMS with a code to the number above.
       </Text>
