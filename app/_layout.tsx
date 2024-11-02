@@ -39,7 +39,7 @@ const tokenCache = {
     try {
       return SecureStore.setItemAsync(key, value);
     } catch (err) {
-      return;
+      console.log('err', err);
     }
   },
 };
@@ -53,9 +53,8 @@ const InitialLayout = () => {
     if (!isLoaded) return;
     const isTabGroup = segement?.[0] === '(tabs)';
     if ((isSignedIn && !isTabGroup) || true) {
-      router.replace('/(tabs)/calls');
-    } else if (!isSignedIn && isTabGroup) {
-      router.replace('/');
+      router.replace('/(tabs)/chats');
+    } else {
     }
   }, [isLoaded, isSignedIn, router, segement]);
 
