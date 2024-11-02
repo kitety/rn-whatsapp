@@ -20,7 +20,7 @@ interface IChatRowProps {
 const ChatRow: FC<IChatRowProps> = ({ chat }) => {
   return (
     <AppleStyleSwipeableRow>
-      <Link asChild href={`/(tabs)/chats/${chat.id}` as Href<string>}>
+      <Link asChild href={`/message/${chat.id}` as Href<string>}>
         <TouchableHighlight activeOpacity={0.8} underlayColor={colors.lightGray}>
           <View className="flex-row items-center gap-4 px-5 py-2.5">
             <Image className="h-12 w-12 rounded-full" source={{ uri: chat.img }} />

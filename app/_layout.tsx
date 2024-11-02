@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Link, Stack, useRouter, useSegments } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import { useEffect } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import colors from '~/constants/colors';
 
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
@@ -54,7 +54,7 @@ const InitialLayout = () => {
 
   useEffect(() => {
     if (!isLoaded) return;
-    const isTabGroup = segement?.[0] === '(tabs)' || segement?.[0] === '(modals)';
+    const isTabGroup = segement?.[0] === '(tabs)' || segement?.[0] === 'message';
     if (isSignedIn && !isTabGroup) {
       router.replace('/(tabs)/chats');
     } else {
@@ -99,6 +99,37 @@ const InitialLayout = () => {
               </TouchableOpacity>
             </Link>
           ),
+        }}
+      />
+      <Stack.Screen
+        name="message/[id]"
+        options={{
+          headerBackTitleVisible: false,
+          title: '',
+          headerTitle: () => (
+            <View className="flex-row items-center gap-2.5 pb-1">
+              <Image
+                className="h-10 w-10 rounded-full"
+                source={{
+                  uri: 'https://pbs.twimg.com/profile_images/1564203599747600385/f6Lvcpcu_400x400.jpg',
+                }}
+              />
+              <Text className="text-base font-normal">John Doe</Text>
+            </View>
+          ),
+          headerRight: () => (
+            <View style={{ flexDirection: 'row', gap: 30 }}>
+              <TouchableOpacity>
+                <Ionicons color={colors.primary} name="videocam-outline" size={30} />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Ionicons color={colors.primary} name="call-outline" size={30} />
+              </TouchableOpacity>
+            </View>
+          ),
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
         }}
       />
     </Stack>

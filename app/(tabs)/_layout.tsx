@@ -57,8 +57,6 @@ const Layout = () => {
             headerShown: false,
             tabBarStyle: {
               backgroundColor: colors.background,
-              // 作用：当在chat聊天页面时，隐藏tabBar
-              display: segments?.[2] === '[id]' ? 'none' : 'flex',
             },
           }}
         />
