@@ -67,9 +67,8 @@ function ChatPage() {
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'} // 修改1: 添加合适的behavior
       className="flex-1"
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 10 : 0} // 修改2: 考虑底部安全区域
+      keyboardVerticalOffset={Platform.OS === 'ios' ? insets.bottom : 0} // 修改2: 考虑底部安全区域
     >
       <ImageBackground
         className="flex-1 bg-background"
@@ -78,7 +77,6 @@ function ChatPage() {
           marginBottom: insets.bottom,
         }}>
         <GiftedChat
-          bottomOffset={insets.bottom}
           maxComposerHeight={100}
           messages={state.messages}
           renderAvatar={null}
