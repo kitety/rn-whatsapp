@@ -1,10 +1,12 @@
 import { Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
-import { Tabs } from 'expo-router';
+import { Tabs, useSegments } from 'expo-router';
 import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import colors from '~/constants/colors';
 
 const Layout = () => {
+  const segments = useSegments();
+  console.log('chat segments', segments);
   return (
     <GestureHandlerRootView className="flex-1">
       <Tabs
@@ -55,7 +57,8 @@ const Layout = () => {
             headerShown: false,
             tabBarStyle: {
               backgroundColor: colors.background,
-              // display: segments?.[2] === '[id]' ? 'none' : 'flex',
+              // 作用：当在chat聊天页面时，隐藏tabBar
+              display: segments?.[2] === '[id]' ? 'none' : 'flex',
             },
           }}
         />
