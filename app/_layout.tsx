@@ -52,7 +52,7 @@ const InitialLayout = () => {
   useEffect(() => {
     if (!isLoaded) return;
     const isTabGroup = segement?.[0] === '(tabs)';
-    if (isSignedIn && !isTabGroup) {
+    if ((isSignedIn && !isTabGroup) || true) {
       router.replace('/(tabs)/calls');
     } else if (!isSignedIn && isTabGroup) {
       router.replace('/');
