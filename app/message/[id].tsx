@@ -43,6 +43,7 @@ const getInitialMessages = (): IMessage[] => [
 function ChatPage() {
   const insets = useSafeAreaInsets();
   const swipeableRowRef = useRef<Swipeable | null>(null);
+  const oldSwipeableRowRef = useRef<Swipeable | null>(null);
 
   const state = useReactive<{
     messages: IMessage[];
@@ -53,17 +54,15 @@ function ChatPage() {
     text: '',
     replyMessage: null,
   });
-  console.log('state.replyMessage', state.replyMessage);
 
   const updateRowRef = useCallback(
-    (ref: any) => {
-      console.log(' swipeableRowRef.current', swipeableRowRef.current);
-      if (
-        ref &&
-        state.replyMessage &&
-        ref.props.children.props.currentMessage?._id === state.replyMessage?._id
-      ) {
-        swipeableRowRef.current = ref;
+    (currentRef: any) => {
+      const newRefid = currentRef?.props?.children?.props?.currentMessage?._id;
+
+      if (newRefid === state.replyMessage?._id) {
+        // 需要先关掉旧的
+        swipeableRowRef.current?.close?.();
+        swipeableRowRef.current = currentRef;
       }
     },
     [state.replyMessage]
