@@ -62,13 +62,7 @@ export default class SwipeableRow extends Component<PropsWithChildren<IProps>> {
         friction={2}
         ref={this.updateRef}
         renderRightActions={this.renderRightActions}
-        rightThreshold={40}
-        onSwipeableClose={(direction) => {
-          console.log(`Closing swipeable to the ${direction}`);
-        }}
-        onSwipeableOpen={(direction) => {
-          console.log(`Opening swipeable from the ${direction}`);
-        }}>
+        rightThreshold={40}>
         {children}
       </Swipeable>
     );
