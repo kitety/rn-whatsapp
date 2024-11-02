@@ -43,7 +43,7 @@ const OtpPage = () => {
     loading: false,
     phoneNumber: '',
   });
-  const { signUp, setActive } = useSignUp();
+  const { signUp } = useSignUp();
   const { signIn } = useSignIn();
   const { bottom } = useSafeAreaInsets();
   const router = useRouter();

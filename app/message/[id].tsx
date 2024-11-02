@@ -43,7 +43,6 @@ const getInitialMessages = (): IMessage[] => [
 function ChatPage() {
   const insets = useSafeAreaInsets();
   const swipeableRowRef = useRef<Swipeable | null>(null);
-  const oldSwipeableRowRef = useRef<Swipeable | null>(null);
 
   const state = useReactive<{
     messages: IMessage[];
