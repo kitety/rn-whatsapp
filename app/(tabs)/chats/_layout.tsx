@@ -1,5 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Href, Link, Stack } from 'expo-router';
+import { Link, Stack } from 'expo-router';
 import { TouchableOpacity, View } from 'react-native';
 import colors from '~/constants/colors';
 
@@ -17,7 +17,6 @@ const SettingsLayout = () => {
           headerSearchBarOptions: {
             placeholder: 'Search',
           },
-          headerStyle: { backgroundColor: '#fff' },
           headerLeft: () => (
             <TouchableOpacity>
               <Ionicons
@@ -32,7 +31,7 @@ const SettingsLayout = () => {
               <TouchableOpacity>
                 <Ionicons color={colors.primary} name="camera-outline" size={30} />
               </TouchableOpacity>
-              <Link asChild href={'/(modals)/new-chat' as Href<string>}>
+              <Link asChild href="/(modals)/new-chat">
                 <TouchableOpacity>
                   <Ionicons color={colors.primary} name="add-circle" size={30} />
                 </TouchableOpacity>

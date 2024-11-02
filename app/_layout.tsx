@@ -1,10 +1,12 @@
 import '../global.css';
 
 import { ClerkLoaded, ClerkProvider, useAuth } from '@clerk/clerk-expo';
-import { Stack, useRouter, useSegments } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { Link, Stack, useRouter, useSegments } from 'expo-router';
 import * as SecureStore from 'expo-secure-store';
 import { useEffect } from 'react';
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
+import colors from '~/constants/colors';
 
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
@@ -49,10 +51,11 @@ const InitialLayout = () => {
   const segement = useSegments();
   const { isLoaded, isSignedIn } = useAuth();
   console.log('segement,isSignedIn', segement, isSignedIn);
+
   useEffect(() => {
     if (!isLoaded) return;
-    const isTabGroup = segement?.[0] === '(tabs)';
-    if ((isSignedIn && !isTabGroup) || true) {
+    const isTabGroup = segement?.[0] === '(tabs)' || segement?.[0] === '(modals)';
+    if (isSignedIn && !isTabGroup) {
       router.replace('/(tabs)/chats');
     } else {
     }
@@ -74,6 +77,30 @@ const InitialLayout = () => {
         }}
       />
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="(modals)/new-chat"
+        options={{
+          presentation: 'modal',
+          title: 'New Chat',
+          headerTransparent: true,
+          headerBlurEffect: 'regular',
+          headerStyle: {
+            backgroundColor: colors.background,
+          },
+          headerSearchBarOptions: {
+            placeholder: 'Search name or number',
+            hideWhenScrolling: false,
+          },
+          headerRight: () => (
+            <Link asChild href={'/(tabs)/chats'}>
+              <TouchableOpacity
+                style={{ backgroundColor: colors.lightGray, borderRadius: 20, padding: 4 }}>
+                <Ionicons color={colors.gray} name="close" size={30} />
+              </TouchableOpacity>
+            </Link>
+          ),
+        }}
+      />
     </Stack>
   );
 };
